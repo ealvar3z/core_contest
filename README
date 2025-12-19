@@ -1,6 +1,6 @@
 NAME
 
-hallucination-nonidentifiability — structural impossibility result for next-token models
+Hallucination-nonidentifiability: Structural Impossibility Result for Next-token Models
 
 SYNOPSIS
 
@@ -17,12 +17,8 @@ The result is independent of scale, optimization quality, or architecture.
 
 FILES
 
-- core_contest.org
-  Primary document: definitions, assumptions, construction, proof sketch,
-  spoken proof, diagram, references.
-
+- core_contest.org (primary document)
 - Makefile
-  Export targets for slides, HTML, and PDF.
 
 BUILD
 
@@ -34,11 +30,11 @@ Requirements:
 
 Targets:
 
-#+begin_src sh
+```
 make slides
 make html
 make pdf
-#+end_src
+```
 
 SCOPE
 
@@ -48,10 +44,6 @@ This work does not (**yet**):
 - analyze architectures
 - discuss alignment policy
 - model human cognition
-
-STATUS
-
-WIP.
 
 LICENSE
 
