@@ -1,4 +1,4 @@
-ORG=hallucination.org
+ORG=core_contest.org
 EMACS=emacs
 
 all: slides html pdf
