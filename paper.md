@@ -1,212 +1,97 @@
-# Hallucination as Non-Identifiability Under Forced Action
+# plan.md — Hallucination as Non-Identifiability Under Forced Action
 
-## Scope
+## Goal
 
-This document presents a minimal structural result explaining why hallucination is unavoidable in next-token language models under specific assumptions.
+Produce a short, graduate-level, structurally complete explanation showing:
 
-The goal is conceptual clarity, not architectural critique or policy advocacy.
+> **Proposition.** A next-token model trained solely on text and required to emit factual assertions on underspecified prompts must, for some prompts, produce assertions that are false in at least one world consistent with its training data.
 
----
-
-## Definitions
-
-**Next-token model**  
-A conditional language model that estimates a distribution  
-\( P(x_{t+1} \mid x_{\le t}) \) and generates text by sampling or decoding from it.
-
-**World state**  
-A complete specification of facts external to the text that determines factual correctness.
-
-**Hallucination**  
-A generated continuation that asserts a specific factual proposition that is false in at least one world consistent with the model’s training distribution and the given prompt.
+No metaphors. No anthropomorphism. No empirical claims required.
 
 ---
 
-## Assumptions
+## Scope and non-goals
 
-1. **Text-only supervision**  
-   The model is trained solely on text, without access to external ground-truth referents at inference time.
+### In scope
+- Precise definitions (next-token model, world state, hallucination).
+- Minimal assumption set (text-only supervision, underspecification, forced emission).
+- Two indistinguishable worlds construction.
+- Proof sketch + spoken proof.
+- One structural diagram.
+- Tight boundaries: what breaks the result (abstention, oracle access, closed-world restriction).
+- Minimal reference list with URLs.
 
-2. **Underspecified prompts**  
-   Some prompts do not uniquely determine the underlying world state.
-
-3. **Forced emission**  
-   The model is required to emit a continuation asserting a factual proposition. Abstention is not available.
-
----
-
-## The Two Indistinguishable Worlds Construction
-
-### Setup
-
-Let:
-
-- \( W = \{w_1, w_2\} \) be two distinct world states.
-- \( X \) be the space of all finite text sequences.
-
-Assume:
-
-**(S1) Identical observational channel**  
-For all \( x \in X \):
-
-\[
-P(x \mid w_1) = P(x \mid w_2)
-\]
-
-The worlds differ in at least one factual property, but that difference is never expressed in text.
-
-**(S2) World-differentiating proposition**  
-There exists a proposition \( \phi \) such that:
-
-- \( \phi \) is true in \( w_1 \)
-- \( \phi \) is false in \( w_2 \)
-- the prompt \( x_{\le t} \) does not encode which world holds
-
-**(S3) Next-token learner**  
-A model \( M \) is trained to approximate  
-\( P(x_{t+1} \mid x_{\le t}) \) from samples of the observational channel.
-
-**(S4) Forced emission**  
-Given \( x_{\le t} \), the model must emit a continuation asserting either \( \phi \) or \( \neg \phi \).
+### Out of scope
+- Benchmarks, failure case compilations, “AI safety” commentary.
+- Transformer internals, scaling laws, optimization details beyond cross-entropy.
+- Claims about human psychology, beliefs, intent, or “making things up.”
+- Claims that RLHF or RAG “solves” hallucination.
 
 ---
 
-### Lemma 1: Irreducible posterior uncertainty
+## Files and outputs
 
-Because the observational channel is identical,
+### Primary source
+- `paper.md` (GitHub Markdown)
+  - Definitions → assumptions → construction → proposition → proof sketch → diagram → consequences → spoken proof → open question → references.
 
-\[
-P(w_1 \mid x_{\le t}) = P(w_2 \mid x_{\le t})
-\]
+### Supporting
+- `README.md` (terse)
+- `honest-math-requirement.md` (or `.org`, optional)
+- `plan.md` (this file)
 
-for all prompts \( x_{\le t} \).
-
-This holds even with infinite data, so long as the observational channel is fixed.
-
----
-
-### Lemma 2: Any factual commitment is false in at least one world
-
-If the model asserts \( \phi \):
-
-- correct in \( w_1 \)
-- false in \( w_2 \)
-
-If the model asserts \( \neg \phi \):
-
-- correct in \( w_2 \)
-- false in \( w_1 \)
-
-Thus, every deterministic factual assertion is incorrect in at least one admissible world.
+### Optional exports (if needed)
+- Slides (ox-reveal or markdown-to-slides toolchain)
+- PDF (pandoc / LaTeX)
 
 ---
 
-### Lemma 3: Probabilistic decoding does not resolve the contradiction
+## Diagram (Mermaid, GitHub rendering)
 
-Sampling produces an assertion with probability 1.  
-That assertion is false in at least one world consistent with the prompt and training data.
+**Constraint:** must render cleanly in GitHub Markdown and show terminal “false in …” labels fully.
 
-Calibration does not imply correctness under non-identifiability.
+**Label alignment rule:** diagram text must match proposition vocabulary:
+- “trained solely on text”
+- “underspecified prompt”
+- “forced emission”
+- “assert φ / assert ¬φ”
+- “false in at least one world consistent with training data”
 
----
+Paste into `paper.md` verbatim:
 
-## Proposition
+```mermaid
+%%{init: {"flowchart": {"nodeSpacing": 70, "rankSpacing": 90}, "themeVariables": {"fontSize": "14px"}}}%%
+flowchart LR
+  %% Non-Identifiability Under Forced Action
 
-**Proposition**  
-A next-token model trained solely on text and required to emit factual assertions on underspecified prompts must, for some prompts, produce assertions that are false in at least one world consistent with its training data.
+  subgraph W1["World w1"]
+    W1F["phi is true"]
+  end
 
-This satisfies the definition of hallucination.
+  subgraph W2["World w2"]
+    W2F["phi is false"]
+  end
 
----
+  CH["Identical observational channel<br/>P(x | w1) = P(x | w2)"]
 
-## Diagram (Structural Proof)
+  M["Next-token model trained solely on text<br/>learns P(x_{t+1} | x_{<=t})"]
 
-```
+  P["Underspecified prompt x_{<=t}<br/>(does not encode which world holds)"]
 
-```
-    World w₁                     World w₂
-```
+  F["Forced emission<br/>must emit a factual assertion"]
 
-(φ is true)                  (φ is false)
-│                            │
-└───────────┬────────────────┘
-│
-Identical Text Channel
-P(x | w₁) = P(x | w₂)
-│
-▼
-Next-Token Model
-│
-Forced Emission
-┌────────────┴────────────┐
-assert φ                assert ¬φ
+  A["assert phi"]
+  B["assert not phi"]
 
-```
+  E1["false in w2<br/>(world consistent with training data)"]
+  E2["false in w1<br/>(world consistent with training data)"]
 
----
-
-## Consequences
-
-- Scaling model size or compute improves approximation of  
-  \( P(x_{t+1} \mid x_{\le t}) \) but does not restore identifiability.
-- Calibration changes confidence estimates, not truth conditions.
-- Retrieval or oracle access changes the observational channel and breaks the result.
-- Allowing abstention removes the necessity of false assertion.
-
----
-
-## Spoken Proof (Recording Script)
-
-I will show that hallucination is unavoidable in next-token models under three assumptions: text-only learning, underspecified prompts, and forced emission.
-
-Consider two distinct world states, \( w_1 \) and \( w_2 \), which differ in a factual property but induce identical text distributions.  
-For all observable texts \( x \), \( P(x \mid w_1) = P(x \mid w_2) \).  
-No amount of text alone can distinguish which world is true, even with infinite data, so long as the observational channel is fixed.
-
-A next-token model trained on this data learns \( P(x_{t+1} \mid x_{\le t}) \).  
-Because the observational channel is identical, the posterior over worlds remains equal for every prompt.
-
-Now consider an underspecified prompt and a proposition \( \phi \) that is true in \( w_1 \) and false in \( w_2 \).  
-At inference time, the model must answer.  
-If it asserts \( \phi \), it is wrong in \( w_2 \).  
-If it asserts \( \neg \phi \), it is wrong in \( w_1 \).
-
-Sampling does not help.  
-Some assertion is always produced, and that assertion is false in at least one admissible world.
-
-Therefore, under text-only supervision, underspecification, and forced emission, hallucination is unavoidable.
-
----
-
-## Open Research Question
-
-How should a system optimally trade off abstention against usefulness when operating under non-identifiable uncertainty?
-
----
-
-## Selected References
-
-- **Underspecification Presents Challenges for Credibility in Modern Machine Learning**  
-  D’Amour et al., NeurIPS 2020  
-  https://arxiv.org/abs/2011.03395
-
-- **A Neural Probabilistic Language Model**  
-  Bengio et al., Journal of Machine Learning Research, 2003  
-  https://www.jmlr.org/papers/volume3/bengio03a/bengio03a.pdf
-
-- **Language Models are Unsupervised Multitask Learners**  
-  Radford et al., 2019  
-  https://cdn.openai.com/better-language-models/language_models_are_unsupervised_multitask_learners.pdf
-
-- **Planning and Acting in Partially Observable Stochastic Domains**  
-  Kaelbling, Littman, Cassandra, Artificial Intelligence Journal, 1998  
-  https://www.cs.cmu.edu/~ggordon/780-fall07/kaelbling98.pdf
-
-- **On Calibration of Modern Neural Networks**  
-  Guo et al., ICML 2017  
-  https://arxiv.org/abs/1706.04599
-
-- **Retrieval-Augmented Generation for Knowledge-Intensive NLP Tasks**  
-  Lewis et al., NeurIPS 2020  
-  https://arxiv.org/abs/2005.11401
-```
+  W1F --> CH
+  W2F --> CH
+  CH --> M
+  M --> P
+  P --> F
+  F --> A
+  F --> B
+  A --> E1
+  B --> E2
