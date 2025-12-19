@@ -15,25 +15,14 @@ must act, false factual assertions are unavoidable.
 
 The result is independent of scale, optimization quality, or architecture.
 
-FILES
-
-- core_contest.org (primary document)
-- Makefile
-
 BUILD
 
 Requirements:
-- GNU Emacs
-- Org mode
-- ox-reveal (slides)
-- LaTeX (PDF)
 
-Targets:
+- pandoc
 
 ```
-make slides
-make html
-make pdf
+pandoc paper.org -f org -t gfm --wrap=preserve -o paper.md
 ```
 
 SCOPE
