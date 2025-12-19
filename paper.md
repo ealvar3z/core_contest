@@ -1,8 +1,6 @@
-# plan.md — Hallucination as Non-Identifiability Under Forced Action
-
 ## Goal
 
-Produce a short, graduate-level, structurally complete explanation showing:
+A short, graduate-level, structurally complete explanation showing:
 
 > **Proposition.** A next-token model trained solely on text and required to emit factual assertions on underspecified prompts must, for some prompts, produce assertions that are false in at least one world consistent with its training data.
 
@@ -29,23 +27,6 @@ No metaphors. No anthropomorphism. No empirical claims required.
 
 ---
 
-## Files and outputs
-
-### Primary source
-- `paper.md` (GitHub Markdown)
-  - Definitions → assumptions → construction → proposition → proof sketch → diagram → consequences → spoken proof → open question → references.
-
-### Supporting
-- `README.md` (terse)
-- `honest-math-requirement.md` (or `.org`, optional)
-- `plan.md` (this file)
-
-### Optional exports (if needed)
-- Slides (ox-reveal or markdown-to-slides toolchain)
-- PDF (pandoc / LaTeX)
-
----
-
 ## Diagram (Mermaid, GitHub rendering)
 
 **Constraint:** must render cleanly in GitHub Markdown and show terminal “false in …” labels fully.
@@ -57,7 +38,6 @@ No metaphors. No anthropomorphism. No empirical claims required.
 - “assert φ / assert ¬φ”
 - “false in at least one world consistent with training data”
 
-Paste into `paper.md` verbatim:
 
 ```mermaid
 %%{init: {"flowchart": {"nodeSpacing": 70, "rankSpacing": 90}, "themeVariables": {"fontSize": "14px"}}}%%
